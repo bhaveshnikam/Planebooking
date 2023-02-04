@@ -1,0 +1,63 @@
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.5.0 <0.7.6;
+
+
+contract planebooking
+{
+    uint ticketprice;
+    uint public  totaltickets;
+    string sourcepoint;
+    string destination;
+    address payable owner;
+
+    enum Status
+    {
+     firstclass,
+     secondclass,
+     thirdclass
+    }
+
+     Status public status;
+ 
+   
+   mapping(address=>uint) totalbalance;
+
+   constructor
+   (
+   string memory _sourcepont,
+   string memory _destination,
+   uint _ticketprice,
+   uint _totaltickets
+   ) 
+   {
+      ticketprice=_ticketprice;
+      totaltickets=_totaltickets;
+      destination=_destination;
+      sourcepoint=_sourcepont;
+      owner=msg.sender;
+   }
+
+   receive() external payable{} 
+   
+   function booking
+   (
+   uint tickets,
+   address payable booker,
+   Status _status,
+   address payable to,
+   uint amount
+   ) 
+   public
+   payable 
+   {
+      status=_status;
+      totaltickets=totaltickets-tickets;
+      to.transfer(amount);
+      totalbalance[booker]-=amount;
+      totalbalance[to]+=amount;
+      
+   }
+
+
+
+}
